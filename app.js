@@ -113,7 +113,8 @@ function previewImage(file, pos, cb) {
             img.src = dataURL;
             img.style.margin = '10px';
             img.style.border = '1px solid #ccc';
-            img.width = 300;
+            img.minWidth = '100px';
+            img.className='prev-img-item'
             var li = document.createElement('li');
             li.appendChild(img);
             previewsList.appendChild(li);
