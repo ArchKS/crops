@@ -1,0 +1,6 @@
+- init project
+- use React+Typescript
+- change to cropper.js
+- add image viewer
+- fix image loss bug
+- optmize style
