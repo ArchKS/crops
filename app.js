@@ -11,48 +11,58 @@ var gallery;
 var imageCount;
 
 
-function cropAndDownloadImage(file, pos) {
+function cropAndDownloadImage(index,file, pos) {
+    return new Promise((resolve, reject) => {
+        {
 
-    let { x, y, width, height } = pos;
-    var reader = new FileReader();
+            let { x, y, width, height } = pos;
+            var reader = new FileReader();
 
-    reader.onload = function (e) {
-        // 创建一个新的 Image 对象
-        var image = new Image();
-        image.onload = function () {
-            // 创建一个 canvas 元素
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
+            reader.onload = function (e) {
+                // 创建一个新的 Image 对象
+                var image = new Image();
+                image.onload = function () {
+                    // 创建一个 canvas 元素
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
 
-            // 设置 canvas 的宽度和高度为裁剪区域的大小
-            canvas.width = width;
-            canvas.height = height;
+                    // 设置 canvas 的宽度和高度为裁剪区域的大小
+                    canvas.width = width;
+                    canvas.height = height;
 
-            // 将图片绘制到 canvas 上，并且只显示裁剪的部分
-            ctx.drawImage(image, x, y, width, height, 0, 0, width, height);
+                    // 将图片绘制到 canvas 上，并且只显示裁剪的部分
+                    ctx.drawImage(image, x, y, width, height, 0, 0, width, height);
 
-            // 将 canvas 转换为DataURL（base64格式的图片）
-            var dataURL = canvas.toDataURL('image/png');
+                    // 将 canvas 转换为DataURL（base64格式的图片）
+                    var dataURL = base64ToBlobUrl(canvas.toDataURL('image/png'));
 
-            // 创建一个下载链接
-            var link = document.createElement('a');
-            link.href = dataURL;
-            // 使用上传文件的名称作为下载文件的名称
-            link.download = file.name;
+                    // 创建一个下载链接
+                    var link = document.createElement('a');
+                    link.href = dataURL;
+                    // 使用上传文件的名称作为下载文件的名称
+                    link.download = `${index}_${file.name}`;
 
-            // 模拟点击下载
-            document.body.appendChild(link);
-            link.click();
+                    // 模拟点击下载
+                    document.body.appendChild(link);
+                    link.click();
 
-            // 清理
-            document.body.removeChild(link);
-            canvas = null;
-        };
-        // 设置图片的 src 属性来加载图片
-        image.src = e.target.result;
-    };
-    // 读取文件
-    reader.readAsDataURL(file);
+                    // 清理
+                    document.body.removeChild(link);
+                    canvas = null;
+
+                    setTimeout(() => {
+                        console.log(`download ${file.name}`);
+                        resolve(true);
+                    }, 100);
+                };
+                // 设置图片的 src 属性来加载图片
+                image.src = e.target.result;
+            };
+
+            // 读取文件
+            reader.readAsDataURL(file);
+        }
+    })
 }
 
 
@@ -190,12 +200,14 @@ previews.onclick = function () {
 
 }
 
-download.onclick = () => {
+download.onclick = async () => {
     if (!position) {
         alert("请先框选剪裁区域")
         return;
     }
-    for (let file of files) {
-        cropAndDownloadImage(file, position);
+    for (let index = 0; index < files.length; index++) {
+        let file = files[index];
+        console.log(`download index:${index} file:${file.name}`);
+        await cropAndDownloadImage(index,file, position);
     }
 }
