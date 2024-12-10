@@ -9,16 +9,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
-    <link rel="stylesheet" href="./app.css">
-    
+    <style>
+        #image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .tools {
+            margin-top: 20px;
+        }
+
+        #image-input {
+            margin-bottom: 10px;
+        }
+        .prev-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .prev-list li {
+            list-style: none;
+        }
+    </style>
 </head>
 
 <body>
     <!-- Wrap the image or canvas element with a block element (container) -->
     <div>
-       
-        <input type="file" id="image-input" accept="image/*" multiple >
-        <div class="container" style="max-width: 80vw;">
+
+        <input type="file" id="image-input" accept="image/*" multiple>
+        <div class="container">
             <img id="image">
         </div>
         <div class="tools">
